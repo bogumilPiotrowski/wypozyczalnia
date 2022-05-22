@@ -11,5 +11,4 @@ class User implements java.io.Serializable
         this.name = name;
         this.password = password;
     }
-
 }
