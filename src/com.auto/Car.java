@@ -6,9 +6,9 @@ public class Car {
     public String productionDate;
     public int mileage;
 
-    public Car(boolean isRental, String brand, String productionDate, int  mileage)
+    public Car(String brand, String productionDate, int  mileage)
     {
-        this.isRental = isRental;
+        this.isRental = false;
         this.brand = brand;
         this.productionDate = productionDate;
         this.mileage = mileage;

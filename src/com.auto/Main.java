@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) {
-        User user = new User("Edek", "haslo");
+        User user = new User("Edek", "haslo", "Polska", "Laski", "Słoneczna", "5/23");
         UserStore userStore = new UserStore();
         userStore.add(user);
         String filename = "baza.txt";
