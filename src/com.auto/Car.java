@@ -1,6 +1,6 @@
 package com.auto;
 
-public class Car {
+public class Car implements java.io.Serializable {
     public boolean isRental;
     public String brand;
     public String productionDate;

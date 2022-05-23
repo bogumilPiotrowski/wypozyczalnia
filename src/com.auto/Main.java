@@ -6,8 +6,12 @@ import java.util.ArrayList;
 public class Main {
     public static void main(String[] args) {
         User user = new User("Edek", "haslo", "Polska", "Laski", "Słoneczna", "5/23");
-        UserStore userStore = new UserStore();
-        userStore.add(user);
+        Car car = new Car("Fiat", "22-08-2016", 56478);
+        CarUserRelation carUserRelation = new CarUserRelation(car, user);
+        Store store = new Store();
+        store.add(carUserRelation);
+//        UserStore userStore = new UserStore();
+//        userStore.add(user);
         String filename = "baza.txt";
 
         // Serialization
@@ -17,7 +21,7 @@ public class Main {
             ObjectOutputStream out = new ObjectOutputStream(file);
 
             // Method for serialization of object
-            out.writeObject(userStore);
+            out.writeObject(store);
 
             out.close();
             file.close();
@@ -31,7 +35,7 @@ public class Main {
         }
 
 
-        UserStore userStore1 = null;
+        Store store1 = null;
 
         // Deserialization
         try {
@@ -40,13 +44,13 @@ public class Main {
             ObjectInputStream in = new ObjectInputStream(file);
 
             // Method for deserialization of object
-            userStore1 = (UserStore) in.readObject();
+            store1 = (Store) in.readObject();
 
             in.close();
             file.close();
 
             System.out.println("Object has been deserialized ");
-            System.out.println("a = " + userStore1.list.get(0).name);
+            System.out.println("a = " + store1.list.get(0).car.brand);
         } catch (IOException ex) {
             System.out.println("IOException is caught");
         } catch (ClassNotFoundException ex) {
