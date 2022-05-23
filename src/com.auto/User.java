@@ -15,6 +15,7 @@ class User implements java.io.Serializable
         this.name = name;
         this.password = password;
         this.country = country;
+        this.city = city;
         this.street = street;
         this.houseNumber = houseNumber;
     }
