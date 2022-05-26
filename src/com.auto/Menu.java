@@ -1,16 +1,21 @@
 package com.auto;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 public class Menu {
 
     Store store;
-    public Menu(Store s) throws IOException {
+    public Menu(Store s, Store.UserType userType) throws Exception {
         this.store = s;
-        Admin();
+        if (userType == Store.UserType.Admin) {
+            admin();
+        } else {
+            user();
+        }
     }
 
     public static int menuAdmin() {
@@ -56,7 +61,15 @@ public class Menu {
     public void User() throws IOException {
         Scanner in = new Scanner(System.in);
 
-        int choice = menuUser();
+        List<Car> carList = store.carList();
+        wyswietlListeSamochodow(carList);
+        if (carList.isEmpty()) {
+            System.out.println("Brak samochodów w bazie");
+            return;
+        }
+        int i = carList.size()+1;
+        int choice = samochodmenuAdmin();
+        int numer = 0;
 
         while(choice!=0){
             switch(choice){

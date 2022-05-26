@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import java.util.Scanner;
 
 public class UserLogin {
-    public UserLogin(Store store) throws IOException {
+    public UserLogin(Store store) throws Exception {
 
         Scanner input1 = new Scanner(System.in);
         System.out.println("Wpisz nazwę użytkownika: ");
@@ -15,11 +15,13 @@ public class UserLogin {
         System.out.println("Wpisz hasło: ");
         String password = input2.next();
 
-        if (store.checkCredentials(username, password)) {
-            System.out.println("Zalogowano się.");
-            Menu menu = new Menu(store);
-        } else {
+
+        Store.UserType userType = store.checkCredentials(username, password);
+        if (userType == Store.UserType.Unautorized) {
             System.out.println("Nieprawidłowe hasło lub nazwa użytkownika.");
+        } else {
+            System.out.println("Zalogowano się.");
+            Menu menu = new Menu(store, userType);
         }
     }
 }

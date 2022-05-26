@@ -2,7 +2,7 @@ package com.auto;
 
 import java.time.LocalDateTime;
 
-public class CarUserRelation implements java.io.Serializable {
+public class Relation implements java.io.Serializable {
 
     Car car;
     User user;
@@ -10,7 +10,7 @@ public class CarUserRelation implements java.io.Serializable {
 
     LocalDateTime rentalEnd;
 
-    public CarUserRelation(Car car, User user, LocalDateTime rentalStart, LocalDateTime rentalEnd) {
+    public Relation(Car car, User user, LocalDateTime rentalStart, LocalDateTime rentalEnd) {
         this.car = car;
         this.user = user;
         this.rentalStart = rentalStart;
