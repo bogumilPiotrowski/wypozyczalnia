@@ -42,4 +42,3 @@ public class Car implements java.io.Serializable {
                 '}';
     }
 }
-//https://www.tutussfunny.com/car-rentail-system-source-code-download/
