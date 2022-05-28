@@ -87,6 +87,20 @@ public class Store implements java.io.Serializable {
         users.add(user);
     }
 
+    /*
+
+    public void deleteUser(int userId) {
+         System.out.println("Usuwam użytkownika: " + users.stream().filter(user -> user.id == userId).findFirst().orElse(null));
+         list.removeIf(relation -> relation.user.id == userId);
+         users.removeIf(car -> user.id == userId);
+    }
+
+    public User userDetails(int userId) {
+         return users.get(userId-1);
+    }
+
+    */
+
     public void saveFile() {
         try {
             //Saving of object in a file
