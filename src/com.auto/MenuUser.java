@@ -78,8 +78,9 @@ public class MenuUser {
                     if (numer < 1 || numer > i) {
                         System.out.println("Niewłaściwy numer");
                     } else {
-                        System.out.println(carList.get(numer-1).id);
-                        store.returnCar(user.id, carList.get(numer-1).id);
+                        Car c = store.carDetails(numer);
+                        System.out.println(c.brand);
+                        System.out.println(c.model);
                     }
                     break;
 
@@ -97,6 +98,7 @@ public class MenuUser {
             System.out.println("Wciśnij Enter, aby kontynuować...");
             System.in.read();
 
+            wyswietlListeSamochodow(carList);
             choice = listadostepnychmenu();
         }
     }
@@ -115,6 +117,7 @@ public class MenuUser {
     public void listawypozyczonych(List<Car> carList, List<Integer> list) throws IOException {
         Scanner in = new Scanner(System.in);
         int numer = 0;
+        boolean notEmpty = true;
 
         if (carList.isEmpty()) {
             System.out.println("Brak samochodów w bazie");
@@ -124,7 +127,7 @@ public class MenuUser {
 
         int choice = listawypozyczonychmenu();
 
-        while(choice!=0){
+        while(choice!=0 && notEmpty){
             switch(choice){
                 case 1:
                     try {
@@ -213,12 +216,16 @@ public class MenuUser {
 
                 case 2:
                     List<Car> cars = store.rentListByUser(user.id);
-                    List<Integer> list = new ArrayList<Integer>();
-                    for (int j = 0; j < cars.size(); j++) {
-                        Car car = cars.get(j);
-                        list.add(car.id);
+                    if(cars.isEmpty()) {
+                        System.out.println("Nie wypożyczasz żadnego auta");
+                    } else {
+                        List<Integer> list = new ArrayList<Integer>();
+                        for (int j = 0; j < cars.size(); j++) {
+                            Car car = cars.get(j);
+                            list.add(car.id);
+                        }
+                        listawypozyczonych(cars, list);
                     }
-                    listawypozyczonych(cars, list);
                     break;
 
                 case 3:
