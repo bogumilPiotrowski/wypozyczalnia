@@ -3,7 +3,9 @@ package com.auto;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Store implements java.io.Serializable {
 
@@ -47,16 +49,40 @@ public class Store implements java.io.Serializable {
         if (relation == null) {
             throw new RentNotFoundException("Nie wypożyczasz żadnego auta");
         }
-        relation.rentalEnd = LocalDateTime.now();
 
+        System.out.println("Zwracam auto" + list.get(list.indexOf(relation)).car.brand);
+        System.out.println(list.get(list.indexOf(relation)).car.brand);
+        list.get(list.indexOf(relation)).rentalEnd = LocalDateTime.now();
+        System.out.println("Zwrocono" + list.get(list.indexOf(relation)).rentalEnd);
     }
 
-    public List<Relation> rentList() throws Exception {
+    public List<Relation> rentedCars() throws Exception {
         List<Relation> rented = list.stream().filter(x -> x.rentalEnd == null).toList();
         if (rented.isEmpty()) {
             throw new RentNotFoundException("Nie wypożyczasz żadnego auta");
         }
 
+        return rented;
+    }
+
+    public List<Car> availableCars() throws Exception {
+
+        Set<Car> a = new HashSet<>(cars);
+        Set<Car> b = new HashSet<>(rentedCars().stream().map(x -> x.car).toList());
+        a.removeAll(b);
+        List<Car> rented = List.copyOf(a);
+        if (rented.isEmpty()) {
+            throw new RentNotFoundException("Brak dostępnych samochodów");
+        }
+
+        return rented;
+    }
+
+    public List<Car> rentListByUser(int userId) throws Exception {
+        List<Car> rented = list.stream().filter(x -> x.rentalEnd == null && x.user.id == userId).map(c -> c.car).toList();
+        if (rented.isEmpty()) {
+            throw new RentNotFoundException("Nie wypożyczasz żadnego auta");
+        }
         return rented;
     }
 
@@ -154,17 +180,17 @@ public class Store implements java.io.Serializable {
         Admin
     }
 
-    public UserType checkCredentials(String user, String password) {
+    public User checkCredentials(String user, String password) {
         Relation relation = list.stream().filter(a -> a.user.name.equals(user)).findFirst().orElse(null);
-        if (relation == null) return UserType.Unautorized;
+        if (relation == null) return null;
         User userCredentials = relation.user;
 
         System.out.println(userCredentials.name);
         System.out.println(userCredentials.password);
 
         if (!userCredentials.name.equals(user) || !userCredentials.password.equals(password))
-            return UserType.Unautorized;
-        return userCredentials.isAdmin ? UserType.Admin : UserType.User;
+            return null;
+        return userCredentials;
     }
 
     public List<User> findByCar(Car car) {
@@ -174,8 +200,6 @@ public class Store implements java.io.Serializable {
     public List<User> userList() {
         return users;
     }
-
-
 
     public List<Car> carList() {
         return cars;
@@ -187,20 +211,12 @@ public class Store implements java.io.Serializable {
         cars.removeIf(car -> car.id == carId);
     }
 
-    public Car showCarDetails(int carId) {
+    public Car carDetails(int carId) {
         return cars.get(carId-1);
     }
 
-    /*
-    public User showUserDetails(int userId) {
-    return users.get(userId-1);
+    public Car editCar(int carId) {
+        return null;
     }
-    */
-
-     /*
-    public User deleteUser(int userId) {
-
-    }
-    */
 
 }

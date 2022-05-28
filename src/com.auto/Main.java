@@ -34,6 +34,11 @@ public class Main {
         store.rentCar(0, 3, LocalDateTime.of(2018, 4, 17, 15, 16), LocalDateTime.of(2018, 4, 25, 15, 16));
         store.rentCar(2, 0, LocalDateTime.of(2018, 4, 17, 15, 16), null);
         store.rentCar(5, 5, LocalDateTime.of(2018, 4, 17, 15, 16), null);
+        store.rentCar(1, 3, LocalDateTime.of(2018, 4, 17, 15, 16), null);
+        store.rentCar(2, 6, LocalDateTime.of(2018, 4, 17, 15, 16), null);
+        store.rentCar(7, 8, LocalDateTime.of(2018, 4, 17, 15, 16), null);
+
+        store.returnCar(2,0);
 
         store.userList().forEach(System.out::println);
         store.carList().forEach(System.out::println);

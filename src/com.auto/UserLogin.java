@@ -16,12 +16,12 @@ public class UserLogin {
         String password = input2.next();
 
 
-        Store.UserType userType = store.checkCredentials(username, password);
-        if (userType == Store.UserType.Unautorized) {
+        User user = store.checkCredentials(username, password);
+        if (user == null) {
             System.out.println("Nieprawidłowe hasło lub nazwa użytkownika.");
         } else {
             System.out.println("Zalogowano się.");
-            Menu menu = new Menu(store, userType);
+            Menu menu = new Menu(store, user);
         }
     }
 }
