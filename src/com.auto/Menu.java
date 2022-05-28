@@ -11,10 +11,12 @@ public class Menu {
     Store store;
     public Menu(Store s, Store.UserType userType) throws Exception {
         this.store = s;
-        if (userType == Store.UserType.Admin) {
-            admin();
+        if (user.isAdmin) {
+            MenuAdmin menu = new MenuAdmin(s, user);
+            menu.admin(s);
         } else {
-            user();
+            MenuUser menu = new MenuUser(s, user);
+            menu.user();
         }
     }
 
