@@ -1,6 +1,8 @@
 package com.auto;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -17,6 +19,12 @@ public class MenuUser {
         for (int i = 0; i < carList.size(); i++) {
             Car car = carList.get(i);
             System.out.println((i+1) + " " + car.brand);
+        }
+    }
+    public void wyswietlListeWypozyczonych(List<Car> carList) {
+        for (int i = 0; i < carList.size(); i++) {
+            Car car = carList.get(i);
+            System.out.println(car.id + " " + car.brand);
         }
     }
 
@@ -104,7 +112,7 @@ public class MenuUser {
 
         return w;
     }
-    public void listawypozyczonych(List<Car> carList, int i) throws IOException {
+    public void listawypozyczonych(List<Car> carList, List<Integer> list) throws IOException {
         Scanner in = new Scanner(System.in);
         int numer = 0;
 
@@ -112,7 +120,7 @@ public class MenuUser {
             System.out.println("Brak samochodów w bazie");
             return;
         }
-        wyswietlListeSamochodow(carList);
+        wyswietlListeWypozyczonych(carList);
 
         int choice = listawypozyczonychmenu();
 
@@ -122,7 +130,7 @@ public class MenuUser {
                     try {
                         System.out.println("Podaj numer samochodu: ");
                         numer = in.nextInt();
-                        if (numer < 1 || numer > i) {
+                        if (!list.contains(numer)) {
                             System.out.println("Niewłaściwy numer");
                         } else {
 
@@ -136,7 +144,6 @@ public class MenuUser {
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
-                    break;
 
                 case 0:
                     break;
@@ -149,6 +156,7 @@ public class MenuUser {
             System.out.println("Wciśnij Enter, aby kontynuować...");
             System.in.read();
 
+            wyswietlListeWypozyczonych(carList);
             choice = listawypozyczonychmenu();
         }
     }
@@ -205,8 +213,12 @@ public class MenuUser {
 
                 case 2:
                     List<Car> cars = store.rentListByUser(user.id);
-                    i = cars.size()+1;
-                    listawypozyczonych(cars, i);
+                    List<Integer> list = new ArrayList<Integer>();
+                    for (int j = 0; j < cars.size(); j++) {
+                        Car car = cars.get(j);
+                        list.add(car.id);
+                    }
+                    listawypozyczonych(cars, list);
                     break;
 
                 case 3:
