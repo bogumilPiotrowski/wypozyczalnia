@@ -16,6 +16,19 @@ public class MenuAdmin {
         this.user = user;
     }
 
+    public void wyswietlListeSamochodow(List<Car> carList) {
+        for (int i = 0; i < carList.size(); i++) {
+            Car car = carList.get(i);
+            System.out.println((i+1) + " " + car.brand);
+        }
+    }
+    public void wyswietlListeUzytkownikow(List<User> userList) {
+        for (int i = 0; i < userList.size(); i++) {
+            User user = userList.get(i);
+            System.out.println((i+1) + " " + user.name);
+        }
+    }
+
     public static int menuAdmin() {
         System.out.println();
         System.out.println("     ****************************************");
@@ -48,22 +61,11 @@ public class MenuAdmin {
         return w;
     }
 
-    public void wyswietlListeSamochodow(List<Car> carList) {
-        for (int i = 0; i < carList.size(); i++) {
-            Car car = carList.get(i);
-            System.out.println((i+1) + " " + car.brand);
-        }
-    }
-    public void samochodAdmin() throws IOException {
+    public void samochodAdmin(List<Car> carList, int i) throws IOException {
         Scanner in = new Scanner(System.in);
 
-        List<Car> carList = store.carList();
         wyswietlListeSamochodow(carList);
-        if (carList.isEmpty()) {
-            System.out.println("Brak samochodów w bazie");
-            return;
-        }
-        int i = carList.size()+1;
+
         int choice = samochodmenuAdmin();
         int numer = 0;
 
@@ -118,7 +120,7 @@ public class MenuAdmin {
                     System.out.println("\n     Niepoprawny operator\n\n");
             }
 
-            System.out.println("\nOperacja została wykonana pomyślnie\nWciśnij Enter, aby kontynuować...");
+            System.out.println("Wciśnij Enter, aby kontynuować...");
             System.in.read();
 
             wyswietlListeSamochodow(carList);
@@ -140,9 +142,11 @@ public class MenuAdmin {
 
         return w;
     }
-    public void uzytkownikAdmin() throws IOException {
+    public void uzytkownikAdmin(List<User> userList, int i) throws IOException {
         Scanner in = new Scanner(System.in);
+        int numer = 0;
 
+        wyswietlListeUzytkownikow(userList);
         int choice = uzytkownikmenuAdmin();
 
         while(choice!=0){
@@ -165,16 +169,14 @@ public class MenuAdmin {
                     break;
 
                 case 2:
-                    /*
                     System.out.println("Podaj numer użytkownika: ");
                     numer = in.nextInt();
                     if (numer < 1 || numer > i) {
                        System.out.println("Niewłaściwy numer");
                     } else {
-                      System.out.println(UserList.get(numer-1).id);
-                      store.deleteUser(UserList.get(numer-1).id);
+                      System.out.println(userList.get(numer-1).id);
+                      store.deleteUser(userList.get(numer-1).id);
                     }
-                     */
                     break;
 
                 case 3:
@@ -182,21 +184,19 @@ public class MenuAdmin {
                     break;
 
                 case 4:
-                    /*
                     System.out.println("Podaj numer użytkownika: ");
                     numer = in.nextInt();
                     if (numer < 1 || numer > i) {
                       System.out.println("Niewłaściwy numer");
                     } else {
-                      User u = store.showUserDetails(numer);
+                      User u = store.userDetails(numer);
                       System.out.println(u.id);
                       System.out.println(u.name);
-                      System.out.println(u.county);
+                      System.out.println(u.country);
                       System.out.println(u.city);
                       System.out.println(u.street);
                       System.out.println(u.houseNumber);
                     }
-                    */
                     break;
 
                 case 0:
@@ -206,9 +206,10 @@ public class MenuAdmin {
                     System.out.println("\n     Niepoprawny operator\n\n");
             }
 
-            System.out.println("\nOperacja została wykonana pomyślnie\nWciśnij Enter, aby kontynuować...");
+            System.out.println("Wciśnij Enter, aby kontynuować...");
             System.in.read();
 
+            wyswietlListeUzytkownikow(userList);
             choice = uzytkownikmenuAdmin();
         }
     }
@@ -232,15 +233,14 @@ public class MenuAdmin {
 
                 case 2:
                     List<User> userList = store.userList();
-                    for (i = 0; i < userList.size(); i++) {
-                        User user = userList.get(i);
-                        System.out.println((i+1) + " " + user.name);
-                    }
-                    uzytkownikAdmin();
+                    i = userList.size();
+                    uzytkownikAdmin(userList, i);
                     break;
 
                 case 3:
-                    samochodAdmin();
+                    List<Car> carList = store.carList();
+                    i = carList.size();
+                    samochodAdmin(carList, i);
                     break;
 
                 case 0:
