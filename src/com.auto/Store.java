@@ -78,7 +78,7 @@ public class Store implements java.io.Serializable {
         return rented;
     }
 
-    public List<Car> rentListByUser(int userId) throws Exception {
+    public List<Car> rentListByUser(int userId) throws RentNotFoundException {
         List<Car> rented = list.stream().filter(x -> x.rentalEnd == null && x.user.id == userId).map(c -> c.car).toList();
         if (rented.isEmpty()) {
             throw new RentNotFoundException("Nie wypożyczasz żadnego auta");
@@ -208,7 +208,7 @@ public class Store implements java.io.Serializable {
     }
 
     public Car carDetails(int carId) {
-        return cars.get(carId-1);
+        return cars.get(carId);
     }
 
     public Car editCar(int carId) {

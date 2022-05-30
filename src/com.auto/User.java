@@ -39,14 +39,12 @@ class User implements java.io.Serializable
 
     @Override
     public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", password='" + password + '\'' +
-                ", country='" + country + '\'' +
-                ", city='" + city + '\'' +
-                ", street='" + street + '\'' +
-                ", houseNumber='" + houseNumber + '\'' +
-                '}';
+        return "Szczegóły" +
+                " " + id +
+                "\n" + name +
+                "\n" + country +
+                "\n" + city +
+                "\n" + street +
+                "\n" + houseNumber;
     }
 }

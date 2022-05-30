@@ -209,7 +209,16 @@ public class MenuUser {
                     break;
 
                 case 2:
-                    List<Car> cars = store.rentListByUser(user.id);
+                    List<Car> cars = new ArrayList<>();
+                    try {
+                        cars = store.rentListByUser(user.id);
+                    } catch (Store.RentNotFoundException e) {
+                        System.out.println("Nie wypożyczasz samochodu");
+                    }
+                    if (cars.isEmpty()) {
+                        choice = 0;
+                        break;
+                    }
                     i = cars.size();
                     listawypozyczonych(cars, i);
                     break;

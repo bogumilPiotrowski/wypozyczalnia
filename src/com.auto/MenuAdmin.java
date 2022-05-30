@@ -19,13 +19,14 @@ public class MenuAdmin {
     public void wyswietlListeSamochodow(List<Car> carList) {
         for (int i = 0; i < carList.size(); i++) {
             Car car = carList.get(i);
-            System.out.println((i+1) + " " + car.brand);
+            System.out.println((i + 1) + " " + car.brand);
         }
     }
+
     public void wyswietlListeUzytkownikow(List<User> userList) {
         for (int i = 0; i < userList.size(); i++) {
             User user = userList.get(i);
-            System.out.println((i+1) + " " + user.name);
+            System.out.println((i + 1) + " " + user.name);
         }
     }
 
@@ -69,8 +70,8 @@ public class MenuAdmin {
         int choice = samochodmenuAdmin();
         int numer = 0;
 
-        while(choice!=0){
-            switch(choice){
+        while (choice != 0) {
+            switch (choice) {
                 case 1:
                     System.out.println("Podaj marke: ");
                     String brand = in.nextLine();
@@ -92,8 +93,8 @@ public class MenuAdmin {
                     if (numer < 1 || numer > i) {
                         System.out.println("Niewłaściwy numer");
                     } else {
-                        System.out.println(carList.get(numer-1).id);
-                        store.deleteCar(carList.get(numer-1).id);
+                        System.out.println(carList.get(numer - 1).id);
+                        store.deleteCar(carList.get(numer - 1).id);
                     }
                     break;
 
@@ -107,7 +108,7 @@ public class MenuAdmin {
                     if (numer < 1 || numer > i) {
                         System.out.println("Niewłaściwy numer");
                     } else {
-                        Car c = store.carDetails(numer);
+                        Car c = store.carDetails(numer - 1);
                         System.out.println(c.brand);
                         System.out.println(c.model);
                     }
@@ -142,6 +143,7 @@ public class MenuAdmin {
 
         return w;
     }
+
     public void uzytkownikAdmin(List<User> userList, int i) throws IOException {
         Scanner in = new Scanner(System.in);
         int numer = 0;
@@ -149,8 +151,8 @@ public class MenuAdmin {
         wyswietlListeUzytkownikow(userList);
         int choice = uzytkownikmenuAdmin();
 
-        while(choice!=0){
-            switch(choice){
+        while (choice != 0) {
+            switch (choice) {
                 case 1:
                     System.out.println("Podaj imie: ");
                     String name = in.nextLine();
@@ -172,10 +174,10 @@ public class MenuAdmin {
                     System.out.println("Podaj numer użytkownika: ");
                     numer = in.nextInt();
                     if (numer < 1 || numer > i) {
-                       System.out.println("Niewłaściwy numer");
+                        System.out.println("Niewłaściwy numer");
                     } else {
-                      System.out.println(userList.get(numer-1).id);
-                      store.deleteUser(userList.get(numer-1).id);
+                        System.out.println(userList.get(numer - 1).id);
+                        store.deleteUser(userList.get(numer - 1).id);
                     }
                     break;
 
@@ -187,15 +189,16 @@ public class MenuAdmin {
                     System.out.println("Podaj numer użytkownika: ");
                     numer = in.nextInt();
                     if (numer < 1 || numer > i) {
-                      System.out.println("Niewłaściwy numer");
+                        System.out.println("Niewłaściwy numer");
                     } else {
-                      User u = store.userDetails(numer);
-                      System.out.println(u.id);
-                      System.out.println(u.name);
-                      System.out.println(u.country);
-                      System.out.println(u.city);
-                      System.out.println(u.street);
-                      System.out.println(u.houseNumber);
+                        User u = store.userDetails(numer);
+                        System.out.println(u.toString());
+//                      System.out.println(u.id);
+//                      System.out.println(u.name);
+//                      System.out.println(u.country);
+//                      System.out.println(u.city);
+//                      System.out.println(u.street);
+//                      System.out.println(u.houseNumber);
                     }
                     break;
 
@@ -222,12 +225,12 @@ public class MenuAdmin {
         int choice = menuAdmin();
         int i = 0;
 
-        while(choice!=0){
-            switch(choice){
+        while (choice != 0) {
+            switch (choice) {
                 case 1:
                     List<Relation> rented = store.rentedCars();
                     for (i = 0; i < rented.size(); i++) {
-                        System.out.println(" Użytkownik " + rented.get(i).user.name + " wypożycza " + rented.get(i).car.brand + " od " + rented.get(i).rentalStart.toString());
+                        System.out.println(" Użytkownik " + rented.get(i).user.name + " id: " + rented.get(i).user.id + " wypożycza " + rented.get(i).car.brand + " id: " + rented.get(i).car.id + " od " + rented.get(i).rentalStart.toString());
                     }
                     break;
 
