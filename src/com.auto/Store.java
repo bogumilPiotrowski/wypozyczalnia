@@ -215,4 +215,8 @@ public class Store implements java.io.Serializable {
         return null;
     }
 
+    public void editUser(int userId, User newUserDetails) {
+        users.set(users.indexOf(userDetails(userId)), newUserDetails);
+    }
+
 }

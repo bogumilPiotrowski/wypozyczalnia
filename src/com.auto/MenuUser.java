@@ -22,6 +22,11 @@ public class MenuUser {
         }
     }
 
+    private void wcisnijEnter(String x) throws IOException {
+        System.out.println(x);
+        System.in.read();
+    }
+
 
     public static int menuUser() {
         System.out.println();
@@ -57,11 +62,6 @@ public class MenuUser {
         int numer = 0;
         int choice = 1;
 
-        if (carList.isEmpty()) {
-            System.out.println("Brak samochodów w bazie");
-            return;
-        }
-
         while(choice!=0){
             wyswietlListeSamochodow(carList);
             choice = listadostepnychmenu();
@@ -77,12 +77,19 @@ public class MenuUser {
                         System.out.println(c.brand);
                         System.out.println(c.model);
                     }
-
-                    System.out.println("Wciśnij Enter, aby kontynuować...");
-                    System.in.read();
                     break;
 
                 case 2:
+                    System.out.println("Podaj numer samochodu: ");
+                    numer = in.nextInt();
+                    if (numer < 1 || numer > i) {
+                        System.out.println("Niewłaściwy numer");
+                    } else {
+                        store.rentCar(user.id, carList.get(numer-1).id, LocalDateTime.now(), null);
+                        carList = store.availableCars();
+
+                        System.out.println("Wypożyczyłeś samochód.");
+                    }
 
                     break;
 
@@ -91,11 +98,10 @@ public class MenuUser {
 
                 default:
                     System.out.println("\n     Niepoprawny operator\n\n");
-
-                    System.out.println("Wciśnij Enter, aby kontynuować...");
-                    System.in.read();
                     break;
             }
+            if (choice != 0)
+                wcisnijEnter("Wciśnij Enter, aby kontynuować...");
         }
     }
 
@@ -116,10 +122,6 @@ public class MenuUser {
         int choice = 1;
 
         while(choice!=0){
-            if(carList.isEmpty()) {
-                System.out.println("Nie wypożyczasz żadnego auta");
-                choice = 0;
-            }
             wyswietlListeSamochodow(carList);
             choice = listawypozyczonychmenu();
             switch(choice){
@@ -139,9 +141,6 @@ public class MenuUser {
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
-
-                    System.out.println("Wciśnij Enter, aby kontynuować...");
-                    System.in.read();
                     break;
 
                 case 0:
@@ -149,14 +148,13 @@ public class MenuUser {
 
                 default:
                     System.out.println("\n     Niepoprawny operator\n\n");
-
-                    System.out.println("Wciśnij Enter, aby kontynuować...");
-                    System.in.read();
                     break;
             }
 
             //Ewentualna informacja o karze za przetrzymanie
         }
+        if (choice != 0)
+            wcisnijEnter("Wciśnij Enter, aby kontynuować...");
     }
 
     public static int danemenu() {
@@ -173,12 +171,33 @@ public class MenuUser {
     public void dane() throws IOException {
         Scanner in = new Scanner(System.in);
         int choice = 1;
+        User u = store.userDetails(user.id);
 
         while(choice!=0){
+            System.out.println(u.toString());
             choice = danemenu();
             switch(choice){
                 case 1:
-
+                    System.out.println("Podaj imie: ");
+                    String name = in.nextLine();
+                    System.out.println("Podaj Państwo: ");
+                    String country = in.nextLine();
+                    System.out.println("Podaj miasto: ");
+                    String city = in.nextLine();
+                    System.out.println("Podaj ulice: ");
+                    String street = in.nextLine();
+                    System.out.println("Podaj numer domu lub numer domu/numer mieszkania: ");
+                    String houseNumber = in.nextLine();
+                    System.out.println("Podaj nowe hasło: ");
+                    String password = in.nextLine();
+                    if(name == "" || country == "" || city == "" || street == "" || houseNumber == "" || password == "") {
+                        System.out.println("Niepoprawne dane");
+                    } else {
+                        User newData = new User(name, password, country, city, street, houseNumber, user.id);
+                        store.editUser(user.id, newData);
+                        System.out.println("Dane zaktualizowano");
+                        u = store.userDetails(user.id);
+                    }
                     break;
 
                 case 0:
@@ -186,11 +205,10 @@ public class MenuUser {
 
                 default:
                     System.out.println("\n     Niepoprawny operator\n\n");
-
-                    System.out.println("Wciśnij Enter, aby kontynuować...");
-                    System.in.read();
                     break;
             }
+            if (choice != 0)
+                wcisnijEnter("Wciśnij Enter, aby kontynuować...");
         }
     }
 
@@ -203,10 +221,13 @@ public class MenuUser {
             choice = menuUser();
             switch(choice){
                 case 1:
-                    //TODO
-                    List<Car> availableCars = store.availableCars();
-                    i = availableCars.size();
-                    listadostepnych(availableCars, i);
+                    try {
+                        List<Car> availableCars = store.availableCars();
+                        i = availableCars.size();
+                        listadostepnych(availableCars, i);
+                    } catch (Exception e) {
+                        System.out.println("Nie ma dostępnych samochodów");
+                    }
                     break;
 
                 case 2:
@@ -217,9 +238,6 @@ public class MenuUser {
                         listawypozyczonych(cars, i);
                     } catch (Store.RentNotFoundException e) {
                         System.out.println("Nie wypożyczasz samochodu");
-
-                        System.out.println("Wciśnij Enter, aby kontynuować...");
-                        System.in.read();
                     }
                     break;
 
@@ -232,14 +250,11 @@ public class MenuUser {
 
                 default:
                     System.out.println("\n     Niepoprawny operator\n\n");
-
-                    System.out.println("\nWciśnij Enter, aby kontynuować...");
-                    System.in.read();
                     break;
             }
+            if (choice != 0)
+                wcisnijEnter("Wciśnij Enter, aby kontynuować...");
         }
-
-        System.out.println("     ****************************************");
-        System.out.println("\n     Koniec programu\n\n");
+        store.saveFile();
     }
 }

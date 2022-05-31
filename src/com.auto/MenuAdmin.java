@@ -65,10 +65,11 @@ public class MenuAdmin {
         return w;
     }
 
-    public void samochodAdmin(List<Car> carList, int i) throws IOException {
+    public void samochodAdmin() throws IOException {
         Scanner in = new Scanner(System.in);
         int numer = 0;
         int choice = 1;
+        List<Car> carList = store.carList();
 
         while (choice != 0) {
             wyswietlListeSamochodow(carList);
@@ -95,11 +96,16 @@ public class MenuAdmin {
                 case 2:
                     System.out.println("Podaj numer samochodu: ");
                     numer = in.nextInt();
-                    if (numer < 1 || numer > i) {
+                    if (numer < 1 || numer > carList.size()) {
                         System.out.println("Niewłaściwy numer");
                     } else {
-                        System.out.println(carList.get(numer - 1).id);
-                        store.deleteCar(carList.get(numer - 1).id);
+                        try {
+                            store.deleteCar(carList.get(numer - 1).id);
+                            carList = store.carList();
+                            System.out.println("Usunięto samochód");
+                        } catch (Exception e) {
+                            System.out.println("Nie ma samochodów do wyświetlenia");
+                        }
                     }
 
                     System.out.println("Wciśnij Enter, aby kontynuować...");
@@ -115,12 +121,13 @@ public class MenuAdmin {
                 case 4:
                     System.out.println("Podaj numer samochodu: ");
                     numer = in.nextInt();
-                    if (numer < 1 || numer > i) {
+                    if (numer < 1 || numer > carList.size()) {
                         System.out.println("Niewłaściwy numer");
                     } else {
-                        Car c = store.carDetails(numer - 1);
-                        System.out.println(c.brand);
-                        System.out.println(c.model);
+                        Car c = store.carDetails(carList.get(numer - 1).id);
+                        System.out.println("Marka: " + c.brand);
+                        System.out.println("Model: " + c.model);
+                        System.out.println("Licznik: " + c.mileage);
                     }
 
                     System.out.println("Wciśnij Enter, aby kontynuować...");
@@ -154,10 +161,12 @@ public class MenuAdmin {
         return w;
     }
 
-    public void uzytkownikAdmin(List<User> userList, int i) throws IOException {
+    public void uzytkownikAdmin() throws IOException {
         Scanner in = new Scanner(System.in);
         int numer = 0;
         int choice = 1;
+        String name, password, country, street, houseNumber;
+        List<User> userList = store.userList();
 
         while (choice != 0) {
             wyswietlListeUzytkownikow(userList);
@@ -165,15 +174,15 @@ public class MenuAdmin {
             switch (choice) {
                 case 1:
                     System.out.println("Podaj imie: ");
-                    String name = in.nextLine();
+                    name = in.nextLine();
                     System.out.println("Podaj hasło: ");
-                    String password = in.nextLine();
-                    System.out.println("Podaj kraj: ");
-                    String country = in.nextLine();
+                    password = in.nextLine();
+                    System.out.println("Podaj Państwo: ");
+                    country = in.nextLine();
                     System.out.println("Podaj miasto: ");
                     String city = in.nextLine();
                     System.out.println("Podaj ulice: ");
-                    String street = in.nextLine();
+                    street = in.nextLine();
                     System.out.println("Podaj numer domu lub numer domu/numer mieszkania: ");
                     String houseNumber = in.nextLine();
                     User user = new User(name, password, country, city, street, houseNumber);
@@ -186,11 +195,12 @@ public class MenuAdmin {
                 case 2:
                     System.out.println("Podaj numer użytkownika: ");
                     numer = in.nextInt();
-                    if (numer < 1 || numer > i) {
+                    if (numer < 1 || numer > userList.size()) {
                         System.out.println("Niewłaściwy numer");
                     } else {
-                        System.out.println(userList.get(numer - 1).id);
                         store.deleteUser(userList.get(numer - 1).id);
+                        System.out.println("Usunięto użytkownika");
+                        userList = store.userList();
                     }
 
                     System.out.println("Wciśnij Enter, aby kontynuować...");
@@ -206,10 +216,10 @@ public class MenuAdmin {
                 case 4:
                     System.out.println("Podaj numer użytkownika: ");
                     numer = in.nextInt();
-                    if (numer < 1 || numer > i) {
+                    if (numer < 1 || numer > userList.size()) {
                         System.out.println("Niewłaściwy numer");
                     } else {
-                        User u = store.userDetails(numer);
+                        User u = store.userDetails(userList.get(numer-1).id);
                         System.out.println(u.toString());
 //                      System.out.println(u.id);
 //                      System.out.println(u.name);
@@ -232,11 +242,12 @@ public class MenuAdmin {
                     System.out.println("Wciśnij Enter, aby kontynuować...");
                     System.in.read();
             }
+            if (choice != 0)
+                wcisnijEnter("Wciśnij Enter, aby kontynuować...");
         }
     }
 
-    public void admin(Store s) throws Exception {
-        this.store = s;
+    public void admin() throws Exception {
 
         Scanner in = new Scanner(System.in);
         int i = 0;
@@ -246,9 +257,13 @@ public class MenuAdmin {
             choice = menuAdmin();
             switch (choice) {
                 case 1:
-                    List<Relation> rented = store.rentedCars();
-                    for (i = 0; i < rented.size(); i++) {
-                        System.out.println(" Użytkownik " + rented.get(i).user.name + " id: " + rented.get(i).user.id + " wypożycza " + rented.get(i).car.brand + " id: " + rented.get(i).car.id + " od " + rented.get(i).rentalStart.toString());
+                    try {
+                        List<Relation> rented = store.rentedCars();
+                        for (i = 0; i < rented.size(); i++) {
+                            System.out.println(" Użytkownik " + rented.get(i).user.name + " id: " + rented.get(i).user.id + " wypożycza " + rented.get(i).car.brand + " id: " + rented.get(i).car.id + " od " + rented.get(i).rentalStart.toString());
+                        }
+                    } catch (Store.RentNotFoundException e) {
+                        System.out.println("Nie wypożyczasz samochodu");
                     }
 
                     System.out.println("\nWciśnij Enter, aby kontynuować...");
@@ -260,17 +275,11 @@ public class MenuAdmin {
                     break;
 
                 case 3:
-                    List<User> userList = store.userList();
-                    i = userList.size();
-                    uzytkownikAdmin(userList, i);
-
+                    uzytkownikAdmin();
                     break;
 
                 case 4:
-                    List<Car> carList = store.carList();
-                    i = carList.size();
-                    samochodAdmin(carList, i);
-
+                    samochodAdmin();
                     break;
 
                 case 5:
@@ -298,9 +307,9 @@ public class MenuAdmin {
                     System.out.println("\nWciśnij Enter, aby kontynuować...");
                     System.in.read();
             }
+            if (choice != 0)
+                wcisnijEnter("Wciśnij Enter, aby kontynuować...");
         }
-
-        System.out.println("     ****************************************");
-        System.out.println("\n     Koniec programu\n\n");
+        store.saveFile();
     }
 }

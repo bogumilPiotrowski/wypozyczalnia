@@ -40,11 +40,11 @@ class User implements java.io.Serializable
     @Override
     public String toString() {
         return "Szczegóły" +
-                " " + id +
-                "\n" + name +
-                "\n" + country +
-                "\n" + city +
-                "\n" + street +
-                "\n" + houseNumber;
+                "\nImie: " + name +
+                "\nPaństwo: " + country +
+                "\nMiasto: " + city +
+                "\nUlica: " + street +
+                "\nHaslo: " + password +
+                "\nNumer domu: " + houseNumber;
     }
 }
