@@ -40,5 +40,6 @@ public class Car implements java.io.Serializable {
                 ", productionDate=" + productionDate +
                 ", mileage=" + mileage +
                 '}';
+
     }
 }

@@ -18,7 +18,7 @@ public class MenuUser {
     public void wyswietlListeSamochodow(List<Car> carList) {
         for (int i = 0; i < carList.size(); i++) {
             Car car = carList.get(i);
-            System.out.println((i+1) + " " + car.id + " " + car.brand);
+            System.out.println((i+1) + " " + car.brand);
         }
     }
 
@@ -55,16 +55,16 @@ public class MenuUser {
     public void listadostepnych(List<Car> carList, int i) throws Exception {
         Scanner in = new Scanner(System.in);
         int numer = 0;
+        int choice = 1;
 
         if (carList.isEmpty()) {
             System.out.println("Brak samochodów w bazie");
             return;
         }
 
-        wyswietlListeSamochodow(carList);
-        int choice = listadostepnychmenu();
-
         while(choice!=0){
+            wyswietlListeSamochodow(carList);
+            choice = listadostepnychmenu();
             switch(choice){
                 case 1:
                     System.out.println("Podaj numer samochodu: ");
@@ -72,14 +72,14 @@ public class MenuUser {
                     if (numer < 1 || numer > i) {
                         System.out.println("Niewłaściwy numer");
                     } else {
-
-                        //store.carDetails() nie znajduje id samochodu
-
                         System.out.println(carList.get(numer-1).id);
                         Car c = store.carDetails(carList.get(numer-1).id);
                         System.out.println(c.brand);
                         System.out.println(c.model);
                     }
+
+                    System.out.println("Wciśnij Enter, aby kontynuować...");
+                    System.in.read();
                     break;
 
                 case 2:
@@ -91,13 +91,11 @@ public class MenuUser {
 
                 default:
                     System.out.println("\n     Niepoprawny operator\n\n");
+
+                    System.out.println("Wciśnij Enter, aby kontynuować...");
+                    System.in.read();
+                    break;
             }
-
-            System.out.println("Wciśnij Enter, aby kontynuować...");
-            System.in.read();
-
-            wyswietlListeSamochodow(carList);
-            choice = listadostepnychmenu();
         }
     }
 
@@ -115,13 +113,15 @@ public class MenuUser {
     public void listawypozyczonych(List<Car> carList, int i) throws IOException {
         Scanner in = new Scanner(System.in);
         int numer = 0;
-        boolean notEmpty = true;
+        int choice = 1;
 
-
-        wyswietlListeSamochodow(carList);
-        int choice = listawypozyczonychmenu();
-
-        while(choice!=0 && notEmpty){
+        while(choice!=0){
+            if(carList.isEmpty()) {
+                System.out.println("Nie wypożyczasz żadnego auta");
+                choice = 0;
+            }
+            wyswietlListeSamochodow(carList);
+            choice = listawypozyczonychmenu();
             switch(choice){
                 case 1:
                     try {
@@ -133,28 +133,36 @@ public class MenuUser {
 
                             //TODO zamiast numer ma być car.id samochodu który chce się zwrócić
                             store.returnCar(user.id, carList.get(numer-1).id);
+                            List<Car> availableCars = store.availableCars();
+
+                            if(carList.isEmpty()) {
+                                System.out.println("Nie wypożyczasz żadnego auta");
+                                choice = 0;
+                            }
                         }
                     } catch (Store.RentNotFoundException e) {
                         System.out.println("Nie wypożyczasz żadnego auta");
                         choice = 0;
-                        break;
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
+
+                    System.out.println("Wciśnij Enter, aby kontynuować...");
+                    System.in.read();
+                    break;
 
                 case 0:
                     break;
 
                 default:
                     System.out.println("\n     Niepoprawny operator\n\n");
+
+                    System.out.println("Wciśnij Enter, aby kontynuować...");
+                    System.in.read();
+                    break;
             }
 
             //Ewentualna informacja o karze za przetrzymanie
-            System.out.println("Wciśnij Enter, aby kontynuować...");
-            System.in.read();
-
-            wyswietlListeSamochodow(carList);
-            choice = listawypozyczonychmenu();
         }
     }
 
@@ -171,10 +179,10 @@ public class MenuUser {
     }
     public void dane() throws IOException {
         Scanner in = new Scanner(System.in);
-
-        int choice = danemenu();
+        int choice = 1;
 
         while(choice!=0){
+            choice = danemenu();
             switch(choice){
                 case 1:
 
@@ -185,21 +193,21 @@ public class MenuUser {
 
                 default:
                     System.out.println("\n     Niepoprawny operator\n\n");
+
+                    System.out.println("Wciśnij Enter, aby kontynuować...");
+                    System.in.read();
+                    break;
             }
-
-            System.out.println("Wciśnij Enter, aby kontynuować...");
-            System.in.read();
-
-            choice = danemenu();
         }
     }
 
     public void user() throws Exception {
 
-        int choice = menuUser();
+        int choice = 1;
         int i;
 
         while(choice!=0){
+            choice = menuUser();
             switch(choice){
                 case 1:
                     //TODO
@@ -232,14 +240,12 @@ public class MenuUser {
 
                 default:
                     System.out.println("\n     Niepoprawny operator\n\n");
+
+                    System.out.println("\nWciśnij Enter, aby kontynuować...");
+                    System.in.read();
+                    break;
             }
-
-            System.out.println("\nWciśnij Enter, aby kontynuować...");
-            System.in.read();
-
-            choice = menuUser();
         }
-
 
         System.out.println("     ****************************************");
         System.out.println("\n     Koniec programu\n\n");
