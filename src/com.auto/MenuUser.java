@@ -1,6 +1,7 @@
 package com.auto;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -176,6 +177,7 @@ public class MenuUser {
         while(choice!=0){
             System.out.println(u.toString());
             choice = danemenu();
+
             switch(choice){
                 case 1:
                     System.out.println("Podaj imie: ");

@@ -7,7 +7,7 @@ public class Menu {
         this.store = s;
         if (user.isAdmin) {
             MenuAdmin menu = new MenuAdmin(s, user);
-            menu.admin(s);
+            menu.admin();
         } else {
             MenuUser menu = new MenuUser(s, user);
             menu.user();

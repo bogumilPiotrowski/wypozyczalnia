@@ -9,11 +9,20 @@ import java.util.Set;
 
 public class Store implements java.io.Serializable {
 
+    private static Store instance;
+
+    public static Store Store() {
+        if (instance == null) {
+            System.out.println("NOWY STORE");
+            instance = new Store();
+        }
+        return instance;
+    }
     String filename = "baza.txt";
 
-    static public ArrayList<Relation> list = new ArrayList<>();
-    static public ArrayList<Car> cars = new ArrayList<>();
-    static public ArrayList<User> users = new ArrayList<>();
+    private ArrayList<Relation> list = new ArrayList<>();
+    private ArrayList<Car> cars = new ArrayList<>();
+    private ArrayList<User> users = new ArrayList<>();
 
     public void rentCar(int userId, int carId, LocalDateTime rentalStart, LocalDateTime rentalEnd) throws Exception {
 
@@ -120,7 +129,9 @@ public class Store implements java.io.Serializable {
          users.removeIf(user -> user.id == userId);
     }
 
-    public User userDetails(int userId) { return users.get(userId-1); }
+    public User userDetails(int userId) {
+        return users.stream().filter(user -> user.id == userId).findFirst().get();
+    }
 
 
     public void saveFile() {
@@ -135,17 +146,15 @@ public class Store implements java.io.Serializable {
             out.close();
             file.close();
 
-            System.out.println("Object has been serialized");
+            carList().forEach(System.out::println);
+            System.out.println("Zapisano bazę");
 
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public Store readFile() {
-        Store store1 = null;
+    public void readFile() throws FileNotFoundException {
 
         // Deserialization
         try {
@@ -154,32 +163,32 @@ public class Store implements java.io.Serializable {
             ObjectInputStream in = new ObjectInputStream(file);
 
             // Method for deserialization of object
-            store1 = (Store) in.readObject();
+            Store s = (Store) in.readObject();
+            this.cars = s.cars;
+            this.users = s.users;
+            this.list = s.list;
+            System.out.println();
 
             in.close();
             file.close();
 
-            System.out.println("Object has been deserialized ");
+            System.out.println("Wczytano bazę ");
+//            return store1;
 //            System.out.println("a = " + store1.list.get(0).car.brand);
+        } catch (FileNotFoundException e) {
+            throw new FileNotFoundException();
         } catch (IOException ex) {
             System.out.println("IOException is caught");
+            System.out.println("Bląd");
         } catch (ClassNotFoundException ex) {
             System.out.println("ClassNotFoundException is caught");
         }
-
-        return store1;
-    }
-
-    enum UserType {
-        Unautorized,
-        User,
-        Admin
+//        return null;
     }
 
     public User checkCredentials(String user, String password) {
-        Relation relation = list.stream().filter(a -> a.user.name.equals(user)).findFirst().orElse(null);
-        if (relation == null) return null;
-        User userCredentials = relation.user;
+        User userCredentials = userList().stream().filter(user1 -> user1.name.equals(user)).findFirst().orElse(null);
+        if (userCredentials == null) return null;
 
         System.out.println(userCredentials.name);
         System.out.println(userCredentials.password);
@@ -208,11 +217,22 @@ public class Store implements java.io.Serializable {
     }
 
     public Car carDetails(int carId) {
-        return cars.get(carId);
+        return cars.stream().filter(car -> car.id == carId).findFirst().get();
     }
 
-    public Car editCar(int carId) {
-        return null;
+    public void editCar(int carId, Car newCarDetails) {
+         cars.set(cars.indexOf(carDetails(carId)), newCarDetails);
+    }
+
+    public int getNextCarId() {
+      return cars.isEmpty() ? 0 : cars.stream().max((o1, o2) -> o1.id > o2.id ? 1 : -1).get().id + 1;
+    }
+
+    public int getUserNextId() {
+        System.out.println(users.size());
+        int i = users.isEmpty() ? 0 : users.stream().max((o1, o2) -> o1.id > o2.id ? 1 : -1).get().id + 1;
+        System.out.println(i);
+        return i;
     }
 
     public void editUser(int userId, User newUserDetails) {

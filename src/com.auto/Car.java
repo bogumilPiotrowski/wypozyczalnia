@@ -18,7 +18,7 @@ public class Car implements java.io.Serializable {
         this.model = model;
         this.productionDate = productionDate;
         this.mileage = mileage;
-        this.id = Store.cars.isEmpty() ? 0 : Store.cars.stream().max((o1, o2) -> o1.id > o2.id ? 1 : -1).get().id + 1;
+        this.id = Store.Store().getNextCarId();
     }
 
     public boolean compare(Car o) {

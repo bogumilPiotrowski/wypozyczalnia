@@ -86,11 +86,12 @@ public class MenuAdmin {
                     LocalDateTime productionDate = LocalDateTime.parse(str, formatter);
                     System.out.println("Podaj licznik kilometrów: ");
                     int mileage = in.nextInt();
-                    Car car = new Car(brand, model, productionDate, mileage);
-                    store.addCar(car);
-
-                    System.out.println("Wciśnij Enter, aby kontynuować...");
-                    System.in.read();
+                    if(brand == "" || model == "" || str == "" || mileage == 0) {
+                        System.out.println("Nieprawidłowe dane");
+                    } else {
+                        Car car = new Car(brand, model, productionDate, mileage);
+                        store.addCar(car);
+                    }
                     break;
 
                 case 2:
@@ -107,15 +108,10 @@ public class MenuAdmin {
                             System.out.println("Nie ma samochodów do wyświetlenia");
                         }
                     }
-
-                    System.out.println("Wciśnij Enter, aby kontynuować...");
-                    System.in.read();
                     break;
 
                 case 3:
 
-                    System.out.println("Wciśnij Enter, aby kontynuować...");
-                    System.in.read();
                     break;
 
                 case 4:
@@ -130,8 +126,6 @@ public class MenuAdmin {
                         System.out.println("Licznik: " + c.mileage);
                     }
 
-                    System.out.println("Wciśnij Enter, aby kontynuować...");
-                    System.in.read();
                     break;
 
                 case 0:
@@ -140,10 +134,15 @@ public class MenuAdmin {
                 default:
                     System.out.println("\n     Niepoprawny operator\n\n");
 
-                    System.out.println("Wciśnij Enter, aby kontynuować...");
-                    System.in.read();
             }
+            if (choice != 0)
+                wcisnijEnter("Wciśnij Enter, aby kontynuować...");
         }
+    }
+
+    private void wcisnijEnter(String x) throws IOException {
+        System.out.println(x);
+        System.in.read();
     }
 
     public static int uzytkownikmenuAdmin() {
@@ -184,12 +183,16 @@ public class MenuAdmin {
                     System.out.println("Podaj ulice: ");
                     street = in.nextLine();
                     System.out.println("Podaj numer domu lub numer domu/numer mieszkania: ");
-                    String houseNumber = in.nextLine();
-                    User user = new User(name, password, country, city, street, houseNumber);
-                    store.addUser(user);
-
-                    System.out.println("Wciśnij Enter, aby kontynuować...");
-                    System.in.read();
+                    houseNumber = in.nextLine();
+                    if(name.isEmpty() || country == "" || city == "" || street == "" || houseNumber == "" || password == "") {
+                        System.out.println("Niepoprawne dane");
+                    } else {
+                        User user = new User(name, password, country, city, street, houseNumber);
+                        store.addUser(user);
+                        System.out.println("Dodano użytkownika");
+                        userList = store.userList();
+                        store.userList().forEach(x -> System.out.println(x.id + " " + x.name));
+                    }
                     break;
 
                 case 2:
@@ -202,18 +205,44 @@ public class MenuAdmin {
                         System.out.println("Usunięto użytkownika");
                         userList = store.userList();
                     }
-
-                    System.out.println("Wciśnij Enter, aby kontynuować...");
-                    System.in.read();
                     break;
 
                 case 3:
-
-                    System.out.println("Wciśnij Enter, aby kontynuować...");
-                    System.in.read();
+                    System.out.println("Podaj numer użytkownika: ");
+                    numer = in.nextInt();
+                    if (numer < 1 || numer > userList.size()) {
+                        System.out.println("Niewłaściwy numer");
+                    } else {
+                        System.out.println("Podaj imie: ");
+                        name = in.nextLine();
+                        System.out.println("Podaj Państwo: ");
+                        country = in.nextLine();
+                        System.out.println("Podaj miasto: ");
+                        city = in.nextLine();
+                        System.out.println("Podaj ulice: ");
+                        street = in.nextLine();
+                        System.out.println("Podaj numer domu lub numer domu/numer mieszkania: ");
+                        houseNumber = in.nextLine();
+                        System.out.println("Podaj nowe hasło: ");
+                        password = in.nextLine();
+                        if (name == "" || country == "" || city == "" || street == "" || houseNumber == "" || password == "") {
+                            System.out.println("Niepoprawne dane");
+                        } else {
+                            User newData = new User(name, password, country, city, street, houseNumber, user.id);
+                            store.editUser(userList.get(numer - 1).id, newData);
+                            System.out.println("Dane zaktualizowano");
+                            userList = store.userList();
+                        }
+                    }
                     break;
 
                 case 4:
+                    System.out.println("++++++++++++++++++++");
+                    userList.forEach(user1 -> System.out.println(user1.id));
+                    System.out.println("++++++++++++++++++++");
+                    store.userList().forEach(user1 -> System.out.println(user1.id));
+                    System.out.println("++++++++++++++++++++");
+                    System.out.println(userList.size());
                     System.out.println("Podaj numer użytkownika: ");
                     numer = in.nextInt();
                     if (numer < 1 || numer > userList.size()) {
@@ -228,8 +257,6 @@ public class MenuAdmin {
 //                      System.out.println(u.street);
 //                      System.out.println(u.houseNumber);
 
-                        System.out.println("Wciśnij Enter, aby kontynuować...");
-                        System.in.read();
                     }
                     break;
 
@@ -238,9 +265,6 @@ public class MenuAdmin {
 
                 default:
                     System.out.println("\n     Niepoprawny operator\n\n");
-
-                    System.out.println("Wciśnij Enter, aby kontynuować...");
-                    System.in.read();
             }
             if (choice != 0)
                 wcisnijEnter("Wciśnij Enter, aby kontynuować...");
@@ -265,9 +289,6 @@ public class MenuAdmin {
                     } catch (Store.RentNotFoundException e) {
                         System.out.println("Nie wypożyczasz samochodu");
                     }
-
-                    System.out.println("\nWciśnij Enter, aby kontynuować...");
-                    System.in.read();
                     break;
 
                 case 2:
@@ -285,17 +306,17 @@ public class MenuAdmin {
                 case 5:
                     System.out.println("Podaj ścieżkę: ");
                     String path = in.nextLine();
-
-                    System.out.println("\nWciśnij Enter, aby kontynuować...");
-                    System.in.read();
+                    try {
+                        FileMenagement fileMenagement = new FileMenagement();
+                        fileMenagement.wszytajSamochodyZPliku(path).forEach(System.out::println);
+                    } catch(Exception e) {
+                        e.getMessage();
+                    }
                     break;
 
                 case 6:
                     System.out.println("Podaj ścieżkę: ");
                     String path1 = in.nextLine();
-
-                    System.out.println("\nWciśnij Enter, aby kontynuować...");
-                    System.in.read();
                     break;
 
                 case 0:
@@ -303,9 +324,6 @@ public class MenuAdmin {
 
                 default:
                     System.out.println("\n     Niepoprawny operator\n\n");
-
-                    System.out.println("\nWciśnij Enter, aby kontynuować...");
-                    System.in.read();
             }
             if (choice != 0)
                 wcisnijEnter("Wciśnij Enter, aby kontynuować...");

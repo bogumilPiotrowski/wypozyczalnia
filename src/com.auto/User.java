@@ -22,7 +22,19 @@ class User implements java.io.Serializable
         this.city = city;
         this.street = street;
         this.houseNumber = houseNumber;
-        this.id = Store.users.isEmpty() ? 0 : Store.users.stream().max((o1, o2) -> o1.id > o2.id ? 1 : -1).get().id + 1;
+        System.out.println("id " + Store.Store().hashCode());
+        this.id = Store.Store().getUserNextId();
+    }
+
+    public User(String name,  String password, String country, String city, String street, String houseNumber, int id)
+    {
+        this.name = name;
+        this.password = password;
+        this.country = country;
+        this.city = city;
+        this.street = street;
+        this.houseNumber = houseNumber;
+        this.id = id;
     }
 
     public User(String name,  String password, String country, String city, String street, String houseNumber, boolean isAdmin)
@@ -33,7 +45,7 @@ class User implements java.io.Serializable
         this.city = city;
         this.street = street;
         this.houseNumber = houseNumber;
-        this.id = Store.users.isEmpty() ? 0 : Store.users.stream().max((o1, o2) -> o1.id > o2.id ? 1 : -1).get().id + 1;
+        this.id = Store.Store().getUserNextId();
         this.isAdmin = true;
     }
 
