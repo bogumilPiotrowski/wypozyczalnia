@@ -35,9 +35,12 @@ public class MenuAdmin {
         System.out.println("     ****************************************");
         System.out.println("     *                 MENU                 *");
         System.out.println("     ****************************************");
-        System.out.println("     1. Wyświetl listę wypożyczonych samochodów");
-        System.out.println("     2. Wyświetl listę użytkowników");
-        System.out.println("     3. Wyświetl listę samochodów");
+        System.out.println("     1. Wyświetl listę wypożyczonych teraz samochodów");
+        System.out.println("     2. Wyświetl historię wypożyczeń samochodów");
+        System.out.println("     3. Wyświetl listę użytkowników");
+        System.out.println("     4. Wyświetl listę samochodów");
+        System.out.println("     5. Wczytaj auta");
+        System.out.println("     6. Zapisz auta");
         System.out.println("     0. Wyloguj się");
 
         System.out.print("\nPodaj operator: ");
@@ -253,17 +256,37 @@ public class MenuAdmin {
                     break;
 
                 case 2:
+
+                    break;
+
+                case 3:
                     List<User> userList = store.userList();
                     i = userList.size();
                     uzytkownikAdmin(userList, i);
 
                     break;
 
-                case 3:
+                case 4:
                     List<Car> carList = store.carList();
                     i = carList.size();
                     samochodAdmin(carList, i);
 
+                    break;
+
+                case 5:
+                    System.out.println("Podaj ścieżkę: ");
+                    String path = in.nextLine();
+
+                    System.out.println("\nWciśnij Enter, aby kontynuować...");
+                    System.in.read();
+                    break;
+
+                case 6:
+                    System.out.println("Podaj ścieżkę: ");
+                    String path1 = in.nextLine();
+
+                    System.out.println("\nWciśnij Enter, aby kontynuować...");
+                    System.in.read();
                     break;
 
                 case 0:
