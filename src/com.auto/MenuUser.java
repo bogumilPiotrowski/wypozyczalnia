@@ -130,15 +130,8 @@ public class MenuUser {
                         if (numer < 1 || numer > i) {
                             System.out.println("Niewłaściwy numer");
                         } else {
-
-                            //TODO zamiast numer ma być car.id samochodu który chce się zwrócić
                             store.returnCar(user.id, carList.get(numer-1).id);
-                            List<Car> availableCars = store.availableCars();
-
-                            if(carList.isEmpty()) {
-                                System.out.println("Nie wypożyczasz żadnego auta");
-                                choice = 0;
-                            }
+                            carList = store.rentListByUser(user.id);
                         }
                     } catch (Store.RentNotFoundException e) {
                         System.out.println("Nie wypożyczasz żadnego auta");
@@ -220,15 +213,14 @@ public class MenuUser {
                     List<Car> cars = new ArrayList<>();
                     try {
                         cars = store.rentListByUser(user.id);
+                        i = cars.size();
+                        listawypozyczonych(cars, i);
                     } catch (Store.RentNotFoundException e) {
                         System.out.println("Nie wypożyczasz samochodu");
+
+                        System.out.println("Wciśnij Enter, aby kontynuować...");
+                        System.in.read();
                     }
-                    if (cars.isEmpty()) {
-                        choice = 0;
-                        break;
-                    }
-                    i = cars.size();
-                    listawypozyczonych(cars, i);
                     break;
 
                 case 3:
