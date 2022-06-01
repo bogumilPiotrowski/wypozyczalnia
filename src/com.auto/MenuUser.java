@@ -2,10 +2,7 @@ package com.auto;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class MenuUser {
     Store store;
@@ -14,6 +11,16 @@ public class MenuUser {
     public MenuUser(Store store, User user) {
         this.store = store;
         this.user = user;
+    }
+
+    public static int readInt() {
+        try {
+            Scanner in = new Scanner(System.in);
+            int w = in.nextInt();
+            return w;
+        } catch (InputMismatchException | NumberFormatException e) {
+            return -1;
+        }
     }
 
     public void wyswietlListeSamochodow(List<Car> carList) {
@@ -41,7 +48,7 @@ public class MenuUser {
 
         System.out.print("\nPodaj operator: ");
         Scanner in = new Scanner(System.in);
-        int w = in.nextInt();
+        int w = readInt();
 
         return w;
     }
@@ -54,7 +61,7 @@ public class MenuUser {
 
         System.out.print("\nPodaj operator: ");
         Scanner in = new Scanner(System.in);
-        int w = in.nextInt();
+        int w = readInt();
 
         return w;
     }
@@ -73,10 +80,11 @@ public class MenuUser {
                     if (numer < 1 || numer > i) {
                         System.out.println("Niewłaściwy numer");
                     } else {
-                        System.out.println(carList.get(numer-1).id);
-                        Car c = store.carDetails(carList.get(numer-1).id);
-                        System.out.println(c.brand);
-                        System.out.println(c.model);
+
+                        Car c = store.carDetails(carList.get(numer - 1).getId());
+                        System.out.println("Marka: " + c.getBrand());
+                        System.out.println("Model: " + c.getModel());
+                        System.out.println("Licznik: " + c.getMileage());
                     }
                     break;
 
@@ -113,7 +121,7 @@ public class MenuUser {
 
         System.out.print("\nPodaj operator: ");
         Scanner in = new Scanner(System.in);
-        int w = in.nextInt();
+        int w = readInt();
 
         return w;
     }
@@ -165,7 +173,7 @@ public class MenuUser {
 
         System.out.print("\nPodaj operator: ");
         Scanner in = new Scanner(System.in);
-        int w = in.nextInt();
+        int w = readInt();
 
         return w;
     }
