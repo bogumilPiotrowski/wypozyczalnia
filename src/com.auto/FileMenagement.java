@@ -13,14 +13,15 @@ public class FileMenagement {
 
         ArrayList<Car> result = new ArrayList<>();
 
-        try (Scanner s = new Scanner(new FileReader(filePath))) {
-            while (s.hasNext()) {
-                String[] car = s.nextLine().split(";");
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
-                result.add(new Car(car[0], car[1], LocalDateTime.parse(car[2], formatter), Integer.parseInt(car[3])));
-            }
-            return result;
+        Scanner s = new Scanner(new FileReader(filePath));
+        while (s.hasNext()) {
+            String[] car = s.nextLine().split(";");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
+            Car newCar = new Car(car[0], car[1], LocalDateTime.parse(car[2], formatter), Integer.parseInt(car[3]));
+            result.add(newCar);
         }
+        return result;
+
     }
 
 
@@ -29,8 +30,7 @@ public class FileMenagement {
             FileWriter writer = new FileWriter(ścieżkadopliku);
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
             for (Car car : listaSamochodów) {
-                System.out.println(car);
-                writer.write(car.brand + ";" + car.model + ";" + car.productionDate.format(formatter) + ";" + car.mileage + "\n");
+                writer.write(car.getBrand() + ";" + car.getModel() + ";" + car.getProductionDate().format(formatter) + ";" + car.getMileage() + "\n");
             }
             writer.close();
         } catch (IOException e) {

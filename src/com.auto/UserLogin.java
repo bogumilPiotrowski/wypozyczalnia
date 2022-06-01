@@ -9,14 +9,15 @@ public class UserLogin {
 
         while (true){
             Scanner input1 = new Scanner(System.in);
-            System.out.println("Wpisz nazwę użytkownika: ");
-            String username = input1.next();
+            System.out.println("LOGOWANIE (brak danych -> wyjście)");
+            System.out.print("Wpisz nazwę użytkownika: ");
+            String username = input1.nextLine();
 
             Scanner input2 = new Scanner(System.in);
-            System.out.println("Wpisz hasło: ");
-            String password = input2.next();
+            System.out.print("Wpisz hasło: ");
+            String password = input2.nextLine();
 
-
+            if (username.equals("") && password.equals("")) return;
             User user =store.checkCredentials(username, password);
             if (user == null) {
                 System.out.println("Nieprawidłowe hasło lub nazwa użytkownika.");

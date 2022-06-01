@@ -4,12 +4,12 @@ import java.time.LocalDateTime;
 import java.util.Date;
 
 public class Car implements java.io.Serializable {
-    public int id;
-    public boolean isRental;
-    public String brand;
-    public String model;
-    public LocalDateTime productionDate;
-    public int mileage;
+    private int id;
+    private boolean isRental;
+    private String brand;
+    private String model;
+    private LocalDateTime productionDate;
+    private int mileage;
 
     public Car(String brand,String model, LocalDateTime productionDate, int mileage)
     {
@@ -18,7 +18,6 @@ public class Car implements java.io.Serializable {
         this.model = model;
         this.productionDate = productionDate;
         this.mileage = mileage;
-        this.id = Store.Store().getNextCarId();
     }
 
     public boolean compare(Car o) {
@@ -41,5 +40,53 @@ public class Car implements java.io.Serializable {
                 ", mileage=" + mileage +
                 '}';
 
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setRental(boolean rental) {
+        isRental = rental;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public void setProductionDate(LocalDateTime productionDate) {
+        this.productionDate = productionDate;
+    }
+
+    public void setMileage(int mileage) {
+        this.mileage = mileage;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public boolean isRental() {
+        return isRental;
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public LocalDateTime getProductionDate() {
+        return productionDate;
+    }
+
+    public int getMileage() {
+        return mileage;
     }
 }

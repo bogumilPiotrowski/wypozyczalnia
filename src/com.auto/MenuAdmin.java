@@ -3,6 +3,8 @@ package com.auto;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -10,6 +12,7 @@ public class MenuAdmin {
 
     Store store;
     User user;
+    Scanner in = new Scanner(System.in);
 
     public MenuAdmin(Store store, User user) {
         this.store = store;
@@ -90,7 +93,7 @@ public class MenuAdmin {
     public void wyswietlListeSamochodow(List<Car> carList) {
         for (int i = 0; i < carList.size(); i++) {
             Car car = carList.get(i);
-            System.out.println((i + 1) + " " + car.brand);
+            System.out.println((i + 1) + " " + car.getBrand());
         }
     }
 
@@ -151,23 +154,18 @@ public class MenuAdmin {
             choice = samochodmenuAdmin();
             switch (choice) {
                 case 1:
-                    System.out.println("Podaj marke: ");
-                    String brand = in.nextLine();
-                    System.out.println("Podaj model: ");
-                    String model = in.nextLine();
-                    System.out.println("Podaj datę produkcji (miesiąc/dzień/rok): ");
-                    String str = in.nextLine() + " 00:00:00";
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
-                    LocalDateTime productionDate = LocalDateTime.parse(str, formatter);
-                    System.out.println("Podaj licznik kilometrów: ");
-                    int mileage = in.nextInt();
-                    if(brand == "" || model == "" || str == "" || mileage == 0) {
-                        System.out.println("Nieprawidłowe dane");
-                    } else {
-                        Car car = new Car(brand, model, productionDate, mileage);
-                        store.addCar(car);
-                    }
-                    break;
+                    System.out.println("Podaj numer samochodu: ");
+                    numer = in.nextInt();
+                        try {
+                            Car car = fillCarDetails();
+                            store.addCar(car);
+                            System.out.println("Dodano samochód");
+                            carList = store.carList();
+
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+//                    }
 
                 case 2:
                     System.out.println("Podaj numer samochodu: ");
@@ -176,7 +174,7 @@ public class MenuAdmin {
                         System.out.println("Niewłaściwy numer");
                     } else {
                         try {
-                            store.deleteCar(carList.get(numer - 1).id);
+                            store.deleteCar(carList.get(numer - 1).getId());
                             carList = store.carList();
                             System.out.println("Usunięto samochód");
                         } catch (Exception e) {
@@ -205,10 +203,10 @@ public class MenuAdmin {
                     if (numer < 1 || numer > carList.size()) {
                         System.out.println("Niewłaściwy numer");
                     } else {
-                        Car c = store.carDetails(carList.get(numer - 1).id);
-                        System.out.println("Marka: " + c.brand);
-                        System.out.println("Model: " + c.model);
-                        System.out.println("Licznik: " + c.mileage);
+                        Car c = store.carDetails(carList.get(numer - 1).getId());
+                        System.out.println("Marka: " + c.getBrand());
+                        System.out.println("Model: " + c.getModel());
+                        System.out.println("Licznik: " + c.getMileage());
                     }
 
                     break;
@@ -257,26 +255,34 @@ public class MenuAdmin {
             choice = uzytkownikmenuAdmin();
             switch (choice) {
                 case 1:
-                    System.out.println("Podaj imie: ");
-                    name = in.nextLine();
-                    System.out.println("Podaj hasło: ");
-                    password = in.nextLine();
-                    System.out.println("Podaj Państwo: ");
-                    country = in.nextLine();
-                    System.out.println("Podaj miasto: ");
-                    String city = in.nextLine();
-                    System.out.println("Podaj ulice: ");
-                    street = in.nextLine();
-                    System.out.println("Podaj numer domu lub numer domu/numer mieszkania: ");
-                    houseNumber = in.nextLine();
-                    if(name.isEmpty() || country == "" || city == "" || street == "" || houseNumber == "" || password == "") {
-                        System.out.println("Niepoprawne dane");
-                    } else {
-                        User user = new User(name, password, country, city, street, houseNumber);
+//                    System.out.println("Podaj imie: ");
+//                    name = in.nextLine();
+//                    System.out.println("Podaj hasło: ");
+//                    password = in.nextLine();
+//                    System.out.println("Podaj Państwo: ");
+//                    country = in.nextLine();
+//                    System.out.println("Podaj miasto: ");
+//                    String city = in.nextLine();
+//                    System.out.println("Podaj ulice: ");
+//                    street = in.nextLine();
+//                    System.out.println("Podaj numer domu lub numer domu/numer mieszkania: ");
+//                    houseNumber = in.nextLine();
+//                    if(name.equals("") || country.equals("") || city.equals("") || street.equals("") || houseNumber.equals("") || password.equals("")) {
+//                        System.out.println("Niepoprawne dane");
+//                    } else {
+//                        User user = new User(name, password, country, city, street, houseNumber);
+//                        store.addUser(user);
+//                        System.out.println("Dodano użytkownika");
+//                        userList = store.userList();
+//                    }
+                    try {
+                        User user = newUser();
                         store.addUser(user);
                         System.out.println("Dodano użytkownika");
                         userList = store.userList();
-                        store.userList().forEach(x -> System.out.println(x.id + " " + x.name));
+
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
                     }
                     break;
 
@@ -332,26 +338,13 @@ public class MenuAdmin {
                     break;
 
                 case 4:
-                    System.out.println("++++++++++++++++++++");
-                    userList.forEach(user1 -> System.out.println(user1.id));
-                    System.out.println("++++++++++++++++++++");
-                    store.userList().forEach(user1 -> System.out.println(user1.id));
-                    System.out.println("++++++++++++++++++++");
-                    System.out.println(userList.size());
-                    System.out.println("Podaj numer użytkownika: ");
-                    numer = in.nextInt();
+                    System.out.print("Podaj numer użytkownika: ");
+                    numer = readInt();
                     if (numer < 1 || numer > userList.size()) {
                         System.out.println("Niewłaściwy numer");
                     } else {
                         User u = store.userDetails(userList.get(numer-1).id);
                         System.out.println(u.toString());
-//                      System.out.println(u.id);
-//                      System.out.println(u.name);
-//                      System.out.println(u.country);
-//                      System.out.println(u.city);
-//                      System.out.println(u.street);
-//                      System.out.println(u.houseNumber);
-
                     }
                     break;
 
@@ -379,15 +372,26 @@ public class MenuAdmin {
                     try {
                         List<Relation> rented = store.rentedCars();
                         for (i = 0; i < rented.size(); i++) {
-                            System.out.println(" Użytkownik " + rented.get(i).user.name + " id: " + rented.get(i).user.id + " wypożycza " + rented.get(i).car.brand + " id: " + rented.get(i).car.id + " od " + rented.get(i).rentalStart.toString());
+                            System.out.println(" Użytkownik " + rented.get(i).user.name + " id: " + rented.get(i).user.id + " wypożycza " + rented.get(i).car.getBrand() + " id: " + rented.get(i).car.getId() + " od " + rented.get(i).rentalStart.toString());
                         }
                     } catch (Store.RentNotFoundException e) {
-                        System.out.println("Nie wypożyczasz samochodu");
+                        System.out.println("Wszystkie auta są do wypożyczenia");
                     }
                     break;
 
                 case 2:
-
+                    try {
+                        List<Relation> rented = store.rentalHistory();
+                        for (i = 0; i < rented.size(); i++) {
+                            Relation relation = rented.get(i);
+                            System.out.println("Użytkownik " + relation.user.name + " id: " + relation.user.id
+                                    + " wypożyczył " + relation.car.getBrand() + " id: " + relation.car.getId());
+                            System.out.println(" od " + relation.rentalStart.toString());
+                            System.out.println("do " + relation.rentalEnd);
+                        }
+                    } catch (Store.RentNotFoundException e) {
+                        System.out.println("Historia pusta");
+                    }
                     break;
 
                 case 3:
@@ -403,15 +407,23 @@ public class MenuAdmin {
                     String path = in.nextLine();
                     try {
                         FileMenagement fileMenagement = new FileMenagement();
-                        fileMenagement.wszytajSamochodyZPliku(path).forEach(System.out::println);
+                        fileMenagement.wszytajSamochodyZPliku(path).forEach(car -> store.addCar(car));
+                        System.out.println("Wczytano samochody z pliku" );
                     } catch(Exception e) {
-                        e.getMessage();
+                        System.out.println("Nie znaleziono pliku");
                     }
                     break;
 
                 case 6:
                     System.out.print("Podaj ścieżkę: ");
                     String path1 = in.nextLine();
+                    try {
+                        FileMenagement fileMenagement = new FileMenagement();
+                        fileMenagement.zapiszDoPliku(path1, store.carList());
+                        System.out.println("Udało się zapisać samochody do pliu: " + path1);
+                    } catch (IOException e) {
+                        System.out.println("Błąd zapisu");
+                    }
                     break;
 
                 case 0:

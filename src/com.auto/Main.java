@@ -23,7 +23,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
 
-//        System.out.println(Store.Store().hashCode());
+
 //
 //        Store.Store().addUser(new User("Edek", "haslo", "Polska", "Laski", "Słoneczna", "5/23"));
 //        Store.Store().addUser(new User("a", "a", "Niemcy", "Berlin", "Garten", "2/4", true));
@@ -62,14 +62,6 @@ public class Main {
 
         try {
             Store.Store().readFile();
-//            System.out.println(store.getUserNextId());
-//            System.out.println(store.hashCode());
-            System.out.println(Store.Store().hashCode());
-            System.out.println(Store.Store().getUserNextId());
-//            System.out.println(store.hashCode());
-//            store.userList().forEach(System.out::println);
-//            store.carList().forEach(System.out::println);
-//            System.out.println(store.userDetails(2).toString());
             UserLogin userLogin = new UserLogin(Store.Store());
         } catch (FileNotFoundException e) {
             System.out.println("Brak pliku: " + Store.Store().filename);

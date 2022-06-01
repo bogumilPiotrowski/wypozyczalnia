@@ -26,7 +26,7 @@ public class MenuUser {
     public void wyswietlListeSamochodow(List<Car> carList) {
         for (int i = 0; i < carList.size(); i++) {
             Car car = carList.get(i);
-            System.out.println((i+1) + " " + car.brand);
+            System.out.println((i + 1) + " " + car.getBrand());
         }
     }
 
@@ -65,15 +65,16 @@ public class MenuUser {
 
         return w;
     }
+
     public void listadostepnych(List<Car> carList, int i) throws Exception {
         Scanner in = new Scanner(System.in);
         int numer = 0;
         int choice = 1;
 
-        while(choice!=0){
+        while (choice != 0) {
             wyswietlListeSamochodow(carList);
             choice = listadostepnychmenu();
-            switch(choice){
+            switch (choice) {
                 case 1:
                     System.out.println("Podaj numer samochodu: ");
                     numer = in.nextInt();
@@ -94,7 +95,7 @@ public class MenuUser {
                     if (numer < 1 || numer > i) {
                         System.out.println("Niewłaściwy numer");
                     } else {
-                        store.rentCar(user.id, carList.get(numer-1).id, LocalDateTime.now(), null);
+                        store.rentCar(user.id, carList.get(numer - 1).getId(), LocalDateTime.now(), null);
                         carList = store.availableCars();
 
                         System.out.println("Wypożyczyłeś samochód.");
@@ -125,15 +126,16 @@ public class MenuUser {
 
         return w;
     }
+
     public void listawypozyczonych(List<Car> carList, int i) throws IOException {
         Scanner in = new Scanner(System.in);
         int numer = 0;
         int choice = 1;
 
-        while(choice!=0){
+        while (choice != 0) {
             wyswietlListeSamochodow(carList);
             choice = listawypozyczonychmenu();
-            switch(choice){
+            switch (choice) {
                 case 1:
                     try {
                         System.out.println("Podaj numer samochodu: ");
@@ -141,14 +143,15 @@ public class MenuUser {
                         if (numer < 1 || numer > i) {
                             System.out.println("Niewłaściwy numer");
                         } else {
-                            store.returnCar(user.id, carList.get(numer-1).id);
+                            store.returnCar(user.id, carList.get(numer - 1).getId());
+                            System.out.println("Zwrócono auto: " + carList.get(numer - 1).getBrand());
                             carList = store.rentListByUser(user.id);
                         }
                     } catch (Store.RentNotFoundException e) {
                         System.out.println("Nie wypożyczasz żadnego auta");
                         choice = 0;
                     } catch (Exception e) {
-                        throw new RuntimeException(e);
+                        System.out.println(e);
                     }
                     break;
 
@@ -162,8 +165,6 @@ public class MenuUser {
 
             //Ewentualna informacja o karze za przetrzymanie
         }
-        if (choice != 0)
-            wcisnijEnter("Wciśnij Enter, aby kontynuować...");
     }
 
     public static int danemenu() {
@@ -177,16 +178,17 @@ public class MenuUser {
 
         return w;
     }
+
     public void dane() throws IOException {
         Scanner in = new Scanner(System.in);
         int choice = 1;
         User u = store.userDetails(user.id);
 
-        while(choice!=0){
+        while (choice != 0) {
             System.out.println(u.toString());
             choice = danemenu();
 
-            switch(choice){
+            switch (choice) {
                 case 1:
                     System.out.println("Podaj imie: ");
                     String name = in.nextLine();
@@ -200,7 +202,7 @@ public class MenuUser {
                     String houseNumber = in.nextLine();
                     System.out.println("Podaj nowe hasło: ");
                     String password = in.nextLine();
-                    if(name == "" || country == "" || city == "" || street == "" || houseNumber == "" || password == "") {
+                    if (name.equals("") || country.equals("") || city.equals("") || street.equals("") || houseNumber.equals("") || password.equals("")) {
                         System.out.println("Niepoprawne dane");
                     } else {
                         User newData = new User(name, password, country, city, street, houseNumber, user.id);
@@ -227,9 +229,9 @@ public class MenuUser {
         int choice = 1;
         int i;
 
-        while(choice!=0){
+        while (choice != 0) {
             choice = menuUser();
-            switch(choice){
+            switch (choice) {
                 case 1:
                     try {
                         List<Car> availableCars = store.availableCars();

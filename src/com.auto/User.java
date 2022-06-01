@@ -22,7 +22,7 @@ class User implements java.io.Serializable
         this.city = city;
         this.street = street;
         this.houseNumber = houseNumber;
-        System.out.println("id " + Store.Store().hashCode());
+//        System.out.println("id " + Store.Store().hashCode());
         this.id = Store.Store().getUserNextId();
     }
 

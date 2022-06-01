@@ -13,7 +13,6 @@ public class Store implements java.io.Serializable {
 
     public static Store Store() {
         if (instance == null) {
-            System.out.println("NOWY STORE");
             instance = new Store();
         }
         return instance;
@@ -26,8 +25,8 @@ public class Store implements java.io.Serializable {
 
     public void rentCar(int userId, int carId, LocalDateTime rentalStart, LocalDateTime rentalEnd) throws Exception {
 
-        System.out.println(userId + " " + carId);
-        Car c = cars.stream().filter(car -> car.id == carId).findFirst().orElse(null);
+//        System.out.println(userId + " " + carId);
+        Car c = cars.stream().filter(car -> car.getId() == carId).findFirst().orElse(null);
         if (c == null)
             throw new CarNotFoundException("Nie ma auta o indexie: " + carId);
 
@@ -45,8 +44,8 @@ public class Store implements java.io.Serializable {
 
     public void returnCar(int userId, int carId) throws Exception {
 
-        System.out.println(userId + " " + carId);
-        Car c = cars.stream().filter(car -> car.id == carId).findFirst().orElse(null);
+//        System.out.println(userId + " " + carId);
+        Car c = cars.stream().filter(car -> car.getId() == carId).findFirst().orElse(null);
         if (c == null)
             throw new CarNotFoundException("Relacja nie może zostać utworzona. Nie ma takiego auta.");
 
@@ -59,13 +58,13 @@ public class Store implements java.io.Serializable {
             throw new RentNotFoundException("Nie wypożyczasz żadnego auta");
         }
 
-        System.out.println("Zwracam auto" + list.get(list.indexOf(relation)).car.brand);
-        System.out.println(list.get(list.indexOf(relation)).car.brand);
+//        System.out.println("Zwracam auto" + list.get(list.indexOf(relation)).car.getBrand());
+//        System.out.println(list.get(list.indexOf(relation)).car.getBrand());
         list.get(list.indexOf(relation)).rentalEnd = LocalDateTime.now();
-        System.out.println("Zwrocono" + list.get(list.indexOf(relation)).rentalEnd);
+//        System.out.println("Zwrocono" + list.get(list.indexOf(relation)).rentalEnd);
     }
 
-    public List<Relation> rentedCars() throws Exception {
+    public List<Relation> rentedCars() throws RentNotFoundException {
         List<Relation> rented = list.stream().filter(x -> x.rentalEnd == null).toList();
         if (rented.isEmpty()) {
             throw new RentNotFoundException("Nie wypożyczasz żadnego auta");
@@ -74,10 +73,24 @@ public class Store implements java.io.Serializable {
         return rented;
     }
 
+    public List<Relation> rentalHistory() throws RentNotFoundException {
+        List<Relation> rented = list.stream().filter(x -> x.rentalEnd != null).toList();
+        if (rented.isEmpty()) {
+            throw new RentNotFoundException("Historia pusta");
+        }
+        return rented;
+    }
+
     public List<Car> availableCars() throws Exception {
 
         Set<Car> a = new HashSet<>(cars);
-        Set<Car> b = new HashSet<>(rentedCars().stream().map(x -> x.car).toList());
+        List<Car> availableCars = new ArrayList<>();
+        try {
+            availableCars = rentedCars().stream().map(x -> x.car).toList();
+        } catch ( RentNotFoundException e) {
+            System.out.println("Wszystkie samochody dostępne");
+        }
+        Set<Car> b = new HashSet<>(availableCars);
         a.removeAll(b);
         List<Car> rented = List.copyOf(a);
         if (rented.isEmpty()) {
@@ -113,18 +126,19 @@ public class Store implements java.io.Serializable {
     }
 
     public void addCar(Car car) {
-        System.out.println(car);
+//        System.out.println(car);
+        car.setId(Store().getNextCarId());
         cars.add(car);
     }
 
     public void addUser(User user) {
-        System.out.println(user);
+//        System.out.println(user);
         users.add(user);
     }
 
 
     public void deleteUser(int userId) {
-         System.out.println("Usuwam użytkownika: " + users.stream().filter(user -> user.id == userId).findFirst().orElse(null));
+//         System.out.println("Usuwam użytkownika: " + users.stream().filter(user -> user.id == userId).findFirst().orElse(null));
          list.removeIf(relation -> relation.user.id == userId);
          users.removeIf(user -> user.id == userId);
     }
@@ -146,7 +160,7 @@ public class Store implements java.io.Serializable {
             out.close();
             file.close();
 
-            carList().forEach(System.out::println);
+//            carList().forEach(System.out::println);
             System.out.println("Zapisano bazę");
 
         } catch (IOException e) {
@@ -167,7 +181,7 @@ public class Store implements java.io.Serializable {
             this.cars = s.cars;
             this.users = s.users;
             this.list = s.list;
-            System.out.println();
+//            System.out.println();
 
             in.close();
             file.close();
@@ -190,9 +204,6 @@ public class Store implements java.io.Serializable {
         User userCredentials = userList().stream().filter(user1 -> user1.name.equals(user)).findFirst().orElse(null);
         if (userCredentials == null) return null;
 
-        System.out.println(userCredentials.name);
-        System.out.println(userCredentials.password);
-
         if (!userCredentials.name.equals(user) || !userCredentials.password.equals(password))
             return null;
         return userCredentials;
@@ -211,27 +222,26 @@ public class Store implements java.io.Serializable {
     }
 
     public void deleteCar(int carId) {
-        System.out.println("Usuwam samochód: " + cars.stream().filter(car -> car.id == carId).findFirst().orElse(null));
-        list.removeIf(relation -> relation.car.id == carId);
-        cars.removeIf(car -> car.id == carId);
+//        System.out.println("Usuwam samochód: " + cars.stream().filter(car -> car.id == carId).findFirst().orElse(null));
+        list.removeIf(relation -> relation.car.getId() == carId);
+        cars.removeIf(car -> car.getId() == carId);
     }
 
     public Car carDetails(int carId) {
-        return cars.stream().filter(car -> car.id == carId).findFirst().get();
+        return cars.stream().filter(car -> car.getId() == carId).findFirst().get();
     }
 
     public void editCar(int carId, Car newCarDetails) {
+        newCarDetails.setId(carDetails(carId).getId());
          cars.set(cars.indexOf(carDetails(carId)), newCarDetails);
     }
 
     public int getNextCarId() {
-      return cars.isEmpty() ? 0 : cars.stream().max((o1, o2) -> o1.id > o2.id ? 1 : -1).get().id + 1;
+      return cars.isEmpty() ? 0 : cars.stream().max((o1, o2) -> o1.getId() > o2.getId() ? 1 : -1).get().getId() + 1;
     }
 
     public int getUserNextId() {
-        System.out.println(users.size());
         int i = users.isEmpty() ? 0 : users.stream().max((o1, o2) -> o1.id > o2.id ? 1 : -1).get().id + 1;
-        System.out.println(i);
         return i;
     }
 
